@@ -4,7 +4,7 @@
 <img width="980" alt="image" src="https://user-images.githubusercontent.com/89664413/169546124-b5a30884-2d14-4ce4-9d99-6114e2dd6819.png">
 
 <h3>적용 기술</h3>
-Python, Django, DRF, sqlite, Jt, Bcrypt
+Python, Django, DRF, sqlite, Jwt, Bcrypt
 
 <h3>API 명세서</h3>
 참조 : https://app.getpostman.com/join-team?invite_code=b993f9f629b1d238bc79c192c1bd7670&target_code=993a6c331efd3f890a08ef2c24d9ceb6
