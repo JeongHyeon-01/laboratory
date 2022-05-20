@@ -93,7 +93,7 @@ class CommentView(APIView):
             "content" : request.data['content'],
             "question" : question_id
         }
-        comment = get_object_or_404(Comments, question = question_id ,id=comment_id)
+        comment = get_object_or_404(Comments, question = question_id ,id=comment_id, user = request.user)
         serializer = CommentSerializer(comment, data=data)
         if serializer.is_valid():
             serializer.save()
