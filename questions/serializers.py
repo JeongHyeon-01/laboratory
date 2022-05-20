@@ -19,14 +19,15 @@ class CommentSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Likes
-        fields=[]
+        fields=['user','like','question']
 
 class QuestionDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
-
+    likes= LikeSerializer(many=True, read_only=True)
+    likes
     class Meta:
         model = Questions
-        fields =['id','title','content','comments']
+        fields =['id','title','content','likes','comments']
 
 
 

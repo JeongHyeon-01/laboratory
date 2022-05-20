@@ -16,6 +16,7 @@ def login_decorator(func):
                 user = Users.objects.get(id=payload['user_id'])
                 request.user = user
                 return func(self, request,*args, **kwargs)
+                
         except jwt.InvalidSignatureError:
             return JsonResponse({'message':'Invalid token. Check the suffix.'}, status=401)
         except jwt.DecodeError:

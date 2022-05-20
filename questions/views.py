@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 
 from django.db.models   import Q
 
-from questions.serializers import QuestionsSerializer,QuestionDetailSerializer,CommentSerializer
-from .models import Comments, Questions
+from questions.serializers import LikeSerializer, QuestionsSerializer,QuestionDetailSerializer,CommentSerializer
+from .models import Comments, Questions, Likes
 from utils.decorator import login_decorator
 
 class QuestionsAPI(APIView):
@@ -111,5 +111,28 @@ class CommentView(APIView):
         comment = get_object_or_404(Comments, user=user , question = question_id ,id=comment_id)
         comment.delete()
         return Response(status=status.HTTP_200_OK)
-
+        
+#좋아요 기능 구현
+class LikesView(APIView):
+    @login_decorator
+    def post(self,request,question_id):
+        if not Likes.objects.filter(user = request.user, question_id = question_id):
+            data = {
+                "user" : request.user.id,
+                "like" : True,
+                "question" : question_id
+            }
+            serializer = LikeSerializer(data = data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, stauts=status.HTTP_200_OK)
+        else:
+            instance = get_object_or_404(Likes, question=question_id, user=request.user)
+            data = {"user" : request.user.id,"like": False if instance.like == True else True, "question" : question_id}
+            serializer = LikeSerializer(instance, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+         
 #질문 작성일 기준 각 월별 전체 질문 중에서 가장 좋아요가 많은 질문을 출력하는 API 개발

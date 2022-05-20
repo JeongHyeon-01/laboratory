@@ -19,7 +19,7 @@ class Comments(TimeStampModel):
         db_table = 'comment'
 
 class Likes(models.Model):
-    question = models.ForeignKey('Questions', on_delete=models.CASCADE)
+    question = models.ForeignKey('Questions',related_name='likes' ,on_delete=models.CASCADE)
     user = models.ForeignKey('users.Users',on_delete=models.CASCADE)
     like = models.BooleanField()
 
