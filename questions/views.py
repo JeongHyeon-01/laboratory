@@ -1,28 +1,26 @@
-from xml.dom.minidom import Comment
-from rest_framework import viewsets, permissions, generics, status
+from rest_framework          import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.views    import APIView
 from rest_framework.generics import get_object_or_404
-from rest_framework.decorators import api_view
 
-from django.db.models   import Q
+from django.db.models        import Q, Sum
 
-from questions.serializers import LikeSerializer, QuestionsSerializer,QuestionDetailSerializer,CommentSerializer
-from .models import Comments, Questions, Likes
+from questions.serializers   import LikeSerializer, QuestionsSerializer,QuestionDetailSerializer,CommentSerializer
+from questions.models        import Comments, Questions, Likes
+
 from utils.decorator import login_decorator
 
 class QuestionsAPI(APIView):
-#키워드로 질문의 제목 또는 본문내용을 검색하는 API 개발
     def bulid(self, qs):
         q = Q()
-        title = qs.GET.get('title',None)
-        content = qs.GET.get('content',None)
+
+        title = qs.get('title',None)
+        content = qs.get('content',None)
 
         if title:
-            q &= Q(questions__title__icontains = title)
-
+            q &= Q(title__icontains = title)
         if content:
-            q &= Q(questions__content__icontains = content)
+            q &= Q(content__icontains = content)
 
         return q
 
@@ -36,7 +34,6 @@ class QuestionsAPI(APIView):
 
     @login_decorator
     def post(self, request):
-        data = request.data
         user = request.user
         data = {
             "title" : request.data['title'],
@@ -51,7 +48,7 @@ class QuestionsAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class QuestiondetailAPI(APIView):
-    def get(self,request,question_id):
+    def get(self,request, question_id):
         question = Questions.objects.filter(id = question_id)
         serializer = QuestionDetailSerializer(question, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -111,7 +108,7 @@ class CommentView(APIView):
         comment = get_object_or_404(Comments, user=user , question = question_id ,id=comment_id)
         comment.delete()
         return Response(status=status.HTTP_200_OK)
-        
+
 #좋아요 기능 구현
 class LikesView(APIView):
     @login_decorator
@@ -136,3 +133,12 @@ class LikesView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
          
 #질문 작성일 기준 각 월별 전체 질문 중에서 가장 좋아요가 많은 질문을 출력하는 API 개발
+class MostValueableView(APIView):
+    def get(self,request):
+        month = request.GET.get('month', None)
+        q = Q(created_at__month=month)
+
+        sum = Questions.objects.annotate(like_count = Sum('likes__like')).filter(q).order_by('-like_count')
+        serializer = QuestionDetailSerializer(sum[0])
+        return Response(serializer.data, status=status.HTTP_200_OK)        
+
