@@ -10,7 +10,7 @@ Python, Django, DRF, sqlite, Jwt, Bcrypt
 참조 : https://app.getpostman.com/join-team?invite_code=b993f9f629b1d238bc79c192c1bd7670&target_code=993a6c331efd3f890a08ef2c24d9ceb6
 <h4>회원가입 로그인</h4>
 POST :8000/users/signin. :로그인
-POST :8000//users/signup  :회원가입
+POST :8000/users/signup  :회원가입
 <h4>question</h4>
 GET :8000/question/posting : 전체 질문 (쿼리 스트링으로 title 및 content 검색 가능 ex: /question/posting?title=1번&content=안녕하세요)
 POST :8000/question/posting : 질문등록
