@@ -7,7 +7,7 @@
 Python, Django, DRF, sqlite, Jwt, Bcrypt
 
 <h3>API 명세서</h3>
-참조 : https://app.getpostman.com/join-team?invite_code=b993f9f629b1d238bc79c192c1bd7670&target_code=7ecfcd19ec3356636a743814b8a1a601
+참조 : [https://app.getpostman.com/join-team?invite_code=b993f9f629b1d238bc79c192c1bd7670&target_code=7ecfcd19ec3356636a743814b8a1a601](https://go.postman.co/workspace/Team-Workspace~ac55c41d-1174-4789-84a0-f64840b46c0f[…]0442-09f1-4da3-a345-0364479a999d?action=share&creator=20075057)
 <h4>회원가입 로그인</h4>
 POST :8000/users/signin. :로그인
 POST :8000/users/signup  :회원가입
